@@ -1,0 +1,15 @@
+{
+  "name": "distributed-queue-remark-slides",
+  "version": "1",
+  "authors": [
+    "Rune Flobakk <flobakk@gmail.com>"
+  ],
+  "description": "Presentasjon av lettvekts distribuert kø basert utviklet på Digipost",
+  "license": "(CC-BY-4.0 OR Apache-2.0)",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "js-sequence-diagrams": "~1.0.6",
+    "remark": "~0.11.0"
+  }
+}

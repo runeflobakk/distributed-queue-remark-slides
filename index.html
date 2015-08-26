@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Selvbygget distribuert kø</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/raphael/raphael-min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/js-sequence-diagrams/build/sequence-diagram-min.js"></script>
+    <script src="bower_components/remark/out/remark.min.js"></script>
+    <script>
+
+      var drawn = new Array();
+      var drawdiagram = function(slide) {
+        var diagram = slide.properties.sequencediagram;
+        if (typeof diagram != 'undefined' && drawn[diagram] === undefined) {
+          $('#' + diagram).sequenceDiagram({theme: 'hand'});
+          drawn[diagram] = true;
+        }
+
+        var classdiagram = slide.properties.classdiagram;
+        if (typeof classdiagram != 'undefined' && drawn[diagram] === undefined) {
+          var yumlSrc = $('#' + classdiagram).text().replace(/(?:\r\n|\r|\n)/g, ',');
+          var formdata = new FormData();
+          formdata.append('dsl_text', yumlSrc);
+          $.ajax({
+            url: 'http://yuml.me/diagram/scruffy;scale:110/class',
+            data: formdata,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(filename) {
+              $('#' + classdiagram).replaceWith("<img src='http://yuml.me/" + filename + "' alt='" + classdiagram + "'/>");
+            }
+          });
+
+        }
+      }
+
+      var slideshow = remark.create({
+        ratio: '4:3',
+        sourceUrl: 'slides.md',
+        navigation: {
+          click: false,
+          scroll: false
+        }
+      });
+      slideshow.on('afterShowSlide', drawdiagram);
+    </script>
+  </body>
+</html>
